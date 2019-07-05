@@ -1,4 +1,14 @@
 #!/bin/bash
+if [ -z "$DNS_DOMAIN_NAME" ]
+then
+      echo -e "\$DNS_DOMAIN_NAME is empty!\nYou can fix this by running: export DNS_DOMAIN_NAME=<yourDomain.com>"
+      exit 0
+fi
+if [ -z "$DNS_PASSWORD" ]
+then
+      echo -e "\$DNS_PASSWORD is empty!\nYou can fix this by running: export DNS_PASSWORD=<password>"
+      exit 0
+fi
 
 FILE=./last_ip
 IP=$(curl ipinfo.io/ip)
@@ -9,7 +19,9 @@ HOSTS=('www' '*' '@')
 function call_api {
     for host in "${HOSTS[@]}"
     do
-            curl -s "https://dynamicdns.park-your-domain.com/update?domain=$DNS_DOMAIN_NAME&password=$DNS_PASSWORD&host=$host"
+        echo -e "\nUpdating IP for host $host ..."
+        echo $(curl -s "https://dynamicdns.park-your-domain.com/update?domain=$DNS_DOMAIN_NAME&password=$DNS_PASSWORD&host=$host") |
+    xmllint --format - > logs
     done
 }
 
@@ -30,3 +42,5 @@ else
     echo $IP > $FILE
     call_api
 fi
+
+echo -e "\nDONE!\nIf you experience any errors:\n1. Check the logs file (`cat ./logs`)\n2. Remove last_ip file(`rm ./last_ip`)\n3. Restart the process described at:\nhttps://github.com/dcorral3/server_ip_utils"

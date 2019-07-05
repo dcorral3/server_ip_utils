@@ -1,10 +1,11 @@
-# IP CHECK AND UPDATE
+# IP CHECK AND **NAMECHEAP** DDNS UPDATE
 
-This script checks whether current ip is the same as the previous one, if not, calls [namecheap](namecheap.com) API and updates IP on your listed hosts.
+This script checks whether current ip is the same as the previous one, if not, calls [namecheap](namecheap.com) API and updates IP on your listed hosts with the IP of the calling machine.
 
 ### Dependencies
 
-- curl
+- [curl](https://curl.haxx.se/)
+- [libxml2-utils](http://www.xmlsoft.org/)
 
 ### Installing
 
@@ -39,9 +40,15 @@ cd server_ip_utils
 
 Done!
 
-    Note that you might also execute this as a cronjob using crontab
-
-More about [crontab](https://kb.iu.edu/d/afiz).
+> The script will generate *logs* and *last_ip* files. 
+> 
+> * ***logs*** file will store the response of the **curl** command.
+> 
+> * ***last_ip*** file will store the last IP for comparison.
+> 
+> Note: that you might also execute this as a cronjob using crontab.
+> 
+> More about [crontab](https://kb.iu.edu/d/afiz).
 
 ## Contributing
 
