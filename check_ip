@@ -17,11 +17,13 @@ IP=$(curl ipinfo.io/ip)
 HOSTS=('www' '*' '@')
 
 function call_api {
+    echo "" > logs #clear logs file
     for host in "${HOSTS[@]}"
     do
-        echo -e "\nUpdating IP for host $host ..."
+        echo -e "Updating IP for host $host ..." 
+        echo "- HOST $host:" >> logs
         echo $(curl -s "https://dynamicdns.park-your-domain.com/update?domain=$DNS_DOMAIN_NAME&password=$DNS_PASSWORD&host=$host") |
-    xmllint --format - > logs
+    xmllint --format - >> logs
     done
 }
 
@@ -43,4 +45,4 @@ else
     call_api
 fi
 
-echo -e "\nDONE!\nIf you experience any errors:\n1. Check the logs file (`cat ./logs`)\n2. Remove last_ip file(`rm ./last_ip`)\n3. Restart the process described at:\nhttps://github.com/dcorral3/server_ip_utils"
+echo -e "\nDONE!\nIf you experience any errors:\n1. Check the logs file 'cat ./logs'\n2. Remove last_ip file 'rm ./last_ip'\n3. Restart the process described at:\nhttps://github.com/dcorral3/server_ip_utils"

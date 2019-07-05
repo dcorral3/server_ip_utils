@@ -1,6 +1,6 @@
 # IP CHECK AND **NAMECHEAP** DDNS UPDATE
 
-This script checks whether current ip is the same as the previous one, if not, calls [namecheap](namecheap.com) API and updates IP on your listed hosts with the IP of the calling machine.
+This script checks whether current ip is the same as the previous one, if not, calls [namecheap](namecheap.com) API and updates IP on your listed hosts **with the IP of the calling machine**.
 
 ### Dependencies
 
