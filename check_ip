@@ -1,48 +1,55 @@
 #!/bin/sh
-if [ -z "$DNS_DOMAIN_NAME" ]
-then
-      echo -e "\$DNS_DOMAIN_NAME is empty!\nYou can fix this by running: export DNS_DOMAIN_NAME=<yourDomain.com>"
-      exit 0
-fi
-if [ -z "$DNS_PASSWORD" ]
-then
-      echo -e "\$DNS_PASSWORD is empty!\nYou can fix this by running: export DNS_PASSWORD=<password>"
-      exit 0
-fi
-
-FILE=./last_ip
-IP=$(curl ipinfo.io/ip)
-
-# Hosts in your domain provider, any subdomain should be also included.
-HOSTS=('www' '*' '@')
-
-function call_api {
-    echo "" > logs #clear logs file
-    for host in "${HOSTS[@]}"
-    do
-        echo -e "Updating IP for host $host ..." 
-        echo "- HOST $host:" >> logs
-        echo $(curl -s "https://dynamicdns.park-your-domain.com/update?domain=$DNS_DOMAIN_NAME&password=$DNS_PASSWORD&host=$host") |
-    xmllint --format - >> logs
-    done
-}
-
-if [ -f "$FILE" ]; then
-    echo "reading last_ip..."
-    LAST_IP=$( cat $FILE )
-    echo "last ip: $LAST_IP"
-    echo "current ip: $IP"
-    if [ $IP != $LAST_IP ]; then
-        echo "The ip is different"
-        echo $IP > $FILE
-	    call_api
-    else
-        echo "The ip is the same"
+while true; do
+    if [ -z "$DNS_DOMAIN_NAME" ]
+    then
+        echo -e "\$DNS_DOMAIN_NAME is empty!\nYou can fix this by running: export DNS_DOMAIN_NAME=<yourDomain.com>"
+        exit 0
     fi
-else 
-    echo -e "$FILE does not exist.\nCreating file..."
-    echo $IP > $FILE
-    call_api
-fi
+    if [ -z "$DNS_PASSWORD" ]
+    then
+        echo -e "\$DNS_PASSWORD is empty!\nYou can fix this by running: export DNS_PASSWORD=<password>"
+        exit 0
+    fi
+    if [ -z "$DNS_UPDATE_INTERVAL" ]
+    then
+        echo -e "\$DNS_UPDATE_INTERVAL is empty!\nYou can fix this by running: export DNS_UPDATE_INTERVAL=<minutes>\nDefault interval is 15 minutes."
+        export DNS_UPDATE_INTERVAL=15
+    fi
 
-echo -e "\nDONE!\nIf you experience any errors:\n1. Check the logs file 'cat ./logs'\n2. Remove last_ip file 'rm ./last_ip'\n3. Restart the process described at:\nhttps://github.com/dcorral3/server_ip_utils"
+    FILE=./last_ip
+    IP=$(curl ipinfo.io/ip)
+
+    # Hosts in your domain provider, any subdomain should be also included.
+    HOSTS=('www' '*' '@')
+
+    function call_api {
+        echo "" > logs #clear logs file
+        for host in "${HOSTS[@]}"
+        do
+            echo -e "Updating IP for host $host ..." 
+            echo "- HOST $host:" >> logs
+            echo $(curl -s "https://dynamicdns.park-your-domain.com/update?domain=$DNS_DOMAIN_NAME&password=$DNS_PASSWORD&host=$host") |
+        xmllint --format - >> logs
+        done
+    }
+
+    if [ -f "$FILE" ]; then
+        echo "reading last_ip..."
+        LAST_IP=$( cat $FILE )
+        echo "last ip: $LAST_IP"
+        echo "current ip: $IP"
+        if [ $IP != $LAST_IP ]; then
+            echo "The ip is different"
+            echo $IP > $FILE
+            call_api
+        else
+            echo "The ip is the same"
+        fi
+    else 
+        echo -e "$FILE does not exist.\nCreating file..."
+        echo $IP > $FILE
+        call_api
+    fi
+    echo -e "\nDONE!\nIf you experience any errors:\n1. Check the logs file 'cat ./logs'\n2. Remove last_ip file 'rm ./last_ip'\n3. Restart the process described at:\nhttps://github.com/dcorral3/server_ip_utils"
+    sleep $DNS_UPDATE_INTERVAL\m
+done

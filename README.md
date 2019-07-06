@@ -18,9 +18,11 @@ git clone https://github.com/dcorral3/server_ip_utils.git
 Set environment variables:
 
 ```bash
-export DNS_DOMAIN_NAME=myDomain.com
-export DNS_PASSWORD=88812d881d18d1882d2 # !! Sensitive information
+export DNS_DOMAIN_NAME=<example.com>
+export DNS_PASSWORD=<password> # !! Sensitive information
+export DNS_UPDATE_INTERVAL=<number | Default=15> # minutes to repeat script execution.
 ```
+
 
 ##### Tutorial for finding DNS_PASSWORD [here](https://www.namecheap.com/support/knowledgebase/article.aspx/595/11/how-do-i-enable-dynamic-dns-for-a-domain)
 
