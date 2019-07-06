@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 if [ -z "$DNS_DOMAIN_NAME" ]
 then
       echo -e "\$DNS_DOMAIN_NAME is empty!\nYou can fix this by running: export DNS_DOMAIN_NAME=<yourDomain.com>"
