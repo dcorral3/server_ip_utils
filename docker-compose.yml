@@ -1,0 +1,8 @@
+version: "3"
+services:
+  check_ip:
+    build: .
+    environment:
+      - DNS_PASSWORD
+      - DNS_DOMAIN_NAME
+      - DNS_UPDATE_INTERVAL
