@@ -1,6 +1,7 @@
 version: "3"
 services:
   check_ip:
+    restart: on-failure
     build: .
     environment:
       - DNS_PASSWORD
