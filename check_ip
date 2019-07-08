@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 while true; do
     if [ -z "$DNS_DOMAIN_NAME" ]
     then
