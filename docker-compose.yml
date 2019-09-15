@@ -1,8 +1,9 @@
 version: "3"
 services:
   check_ip:
+    image: dcorral3/namecheap_dyndns 
     restart: on-failure
-    build: .
+    container_name: namecheap_dyndns
     environment:
       - DNS_PASSWORD
       - DNS_DOMAIN_NAME
